@@ -1,4 +1,5 @@
 import express from "express";
+import { renderToPipeableStream } from "react-dom/server";
 import Router from "./components/router.js";
 import { renderJSXToClientJSX, stringifyJSX } from "./utils/index.js";
 import React from "react";
@@ -15,8 +16,20 @@ app.use(async (req, res, next) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const clientJSX = await renderJSXToClientJSX(<Router url={url} />);
     const clientJSXString = JSON.stringify(clientJSX, stringifyJSX);
-    res.setHeader("Content-Type", "application/json");
-    res.end(clientJSXString);
+    if (url.pathname === "/") {
+      const bootstrapScriptContent = `window.__INITIAL_CLIENT_JSX_STRING__ = ${clientJSXString};`;
+      const { pipe } = renderToPipeableStream(<></>, {
+        bootstrapModules: ["src/client/index.js"],
+        bootstrapScriptContent,
+        onShellReady() {
+          res.setHeader("content-type", "text/html");
+          pipe(res);
+        },
+      });
+    } else {
+      res.setHeader("Content-Type", "application/json");
+      res.end(clientJSXString);
+    }
   } catch (err) {
     next(err);
   }
