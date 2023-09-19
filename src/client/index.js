@@ -1,5 +1,5 @@
 import { fillJSXwithClientComponents, parseJSX } from "./utils/index.js";
-import { hydrateRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
 async function getInitialClientJSX() {
   const clientJSX = JSON.parse(
@@ -9,4 +9,4 @@ async function getInitialClientJSX() {
   return await fillJSXwithClientComponents(clientJSX);
 }
 
-hydrateRoot(document, await getInitialClientJSX());
+createRoot(document).render(await getInitialClientJSX());
