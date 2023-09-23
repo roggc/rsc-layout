@@ -4,7 +4,7 @@ import Link from "./link.js";
 import { useNavigation } from "../hooks/index.js";
 import styled from "styled-components";
 
-export default function Layout({ title }) {
+export default function Layout() {
   const page = useNavigation();
 
   return (

@@ -9,7 +9,7 @@ import theme from "./theme";
 createRoot(document.getElementById("myapp")).render(
   <ThemeProvider theme={theme}>
     <Provider>
-      <Layout title="my app ;-)" />
+      <Layout />
     </Provider>
   </ThemeProvider>
 );

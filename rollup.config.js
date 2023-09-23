@@ -6,6 +6,7 @@ import json from "@rollup/plugin-json";
 import replace from "@rollup/plugin-replace";
 import { globby } from "globby";
 import alias from "@rollup/plugin-alias";
+import image from "@rollup/plugin-image";
 
 export default [
   {
@@ -18,18 +19,7 @@ export default [
       format: "es",
       preserveModules: true,
     },
-    plugins: [
-      babel({ babelHelpers: "bundled", exclude: "node_modules/**" }),
-      alias({
-        entries: [
-          {
-            find: "styled-components",
-            replacement:
-              "node_modules/styled-components/dist/styled-components.esm.js",
-          },
-        ],
-      }),
-    ],
+    plugins: [babel({ babelHelpers: "bundled", exclude: "node_modules/**" })],
   },
   {
     input: (await globby("src/client/*.js"))
@@ -67,6 +57,7 @@ export default [
       replace({
         "process.env.NODE_ENV": JSON.stringify("development"),
       }),
+      image(),
     ],
     onwarn: function (warning, handler) {
       // Skip certain warnings
