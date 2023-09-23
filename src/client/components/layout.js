@@ -11,10 +11,10 @@ export default function Layout() {
     <Container>
       <Nav>
         <Link page={{ name: "home" }}>home</Link>
-        <Link page={{ name: "foo" }}>foo</Link>
         <Link page={{ name: "how-this-setup-works" }}>
           how this setup works
         </Link>
+        <Link page={{ name: "foo" }}>foo</Link>
       </Nav>
       <RSC key={page.name} componentName={page.name} {...page.props}>
         <LoadingContainer>loading {page.name} page...</LoadingContainer>
