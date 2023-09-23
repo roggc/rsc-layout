@@ -34,6 +34,11 @@ export default function Home() {
         , a library to manage state that seamlessly integrates both Redux and
         React Context with zero-boilerplate
       </Div>
+      <Div>
+        With this setup you can build SPA's with secret keys to fetch an API
+        hidden from the Client (browser) or fetch some database in the server
+        with Prisma.
+      </Div>
       <Counters>
         <div>
           <button onClick={() => setCount1((c) => c + 1)}>+</button>
