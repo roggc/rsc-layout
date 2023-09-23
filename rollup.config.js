@@ -17,7 +17,6 @@ export default [
       dir: "dist",
       format: "es",
       preserveModules: true,
-      interop: "auto",
     },
     plugins: [
       babel({ babelHelpers: "bundled", exclude: "node_modules/**" }),
@@ -47,9 +46,9 @@ export default [
       format: "es",
       entryFileNames: "[name].js",
       preserveModules: true,
-      interop: "auto",
     },
     plugins: [
+      peerDepsExternal(),
       babel({
         babelHelpers: "bundled",
         exclude: "node_modules/**",
@@ -62,13 +61,23 @@ export default [
           },
         ],
       }),
-      peerDepsExternal(),
-      commonjs(),
       nodeResolve(),
+      commonjs(),
       json(),
       replace({
         "process.env.NODE_ENV": JSON.stringify("development"),
       }),
     ],
+    onwarn: function (warning, handler) {
+      // Skip certain warnings
+
+      // should intercept ... but doesn't in some rollup versions
+      if (warning.code === "THIS_IS_UNDEFINED") {
+        return;
+      }
+
+      // console.warn everything else
+      handler(warning);
+    },
   },
 ];

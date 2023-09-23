@@ -14,19 +14,27 @@ app.get("/favicon.ico", (req, res, next) => {
 app.use(async (req, res, next) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const clientJSX = await renderJSXToClientJSX(<Router url={url} />);
-    const clientJSXString = JSON.stringify(clientJSX, stringifyJSX);
     if (url.pathname === "/") {
-      const bootstrapScriptContent = `window.__INITIAL_CLIENT_JSX_STRING__ = ${clientJSXString};`;
-      const { pipe } = renderToPipeableStream(<></>, {
-        bootstrapModules: ["src/client/index.js"],
-        bootstrapScriptContent,
-        onShellReady() {
-          res.setHeader("content-type", "text/html");
-          pipe(res);
-        },
-      });
+      const { pipe } = renderToPipeableStream(
+        <html>
+          <head>
+            <title>my app</title>
+          </head>
+          <body>
+            <div id="myapp"></div>
+          </body>
+        </html>,
+        {
+          bootstrapModules: ["src/client/index.js"],
+          onShellReady() {
+            res.setHeader("content-type", "text/html");
+            pipe(res);
+          },
+        }
+      );
     } else {
+      const clientJSX = await renderJSXToClientJSX(<Router url={url} />);
+      const clientJSXString = JSON.stringify(clientJSX, stringifyJSX);
       res.setHeader("Content-Type", "application/json");
       res.end(clientJSXString);
     }

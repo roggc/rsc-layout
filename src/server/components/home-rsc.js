@@ -1,7 +1,6 @@
 import React from "react";
-import Home from "../../client/components/home.js";
+import RCC from "./rcc.js";
 
 export default async function HomeRSC() {
-  const name = await new Promise((r) => setTimeout(() => r("Roger"), 1000));
-  return <Home __isClient__="../components/home.js" name={name} />;
+  return <RCC __isClient__="../components/home.js" />;
 }

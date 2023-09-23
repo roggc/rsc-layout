@@ -8,27 +8,14 @@ export default function Layout({ title }) {
   const page = useNavigation();
 
   return (
-    <html>
-      <head>
-        <title>{title}</title>
-      </head>
-      <Body>
-        <Nav>
-          <Link page={{ name: "home" }}>home</Link>
-          <Link
-            page={{
-              name: "about",
-              props: { author: "Roger Gomez Castells" },
-            }}
-          >
-            about
-          </Link>
-        </Nav>
-        <RSC key={page.name} componentName={page.name} {...page.props}>
-          loading {page.name} page...
-        </RSC>
-      </Body>
-    </html>
+    <Container>
+      <Nav>
+        <Link page={{ name: "home" }}>home</Link>
+      </Nav>
+      <RSC key={page.name} componentName={page.name} {...page.props}>
+        loading {page.name} page...
+      </RSC>
+    </Container>
   );
 }
 
@@ -37,6 +24,6 @@ const Nav = styled.div`
   ${({ theme }) => `gap: ${theme.gap}px;`}
 `;
 
-const Body = styled.body`
+const Container = styled.div`
   font-family: sans-serif;
 `;

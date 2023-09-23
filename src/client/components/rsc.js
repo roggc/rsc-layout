@@ -16,5 +16,6 @@ export default function RSC({ componentName, children, ...props }) {
       }
     );
   }, [componentName, stringifyedProps]);
+
   return JSX;
 }
