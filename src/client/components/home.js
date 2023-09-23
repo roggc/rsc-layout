@@ -1,5 +1,4 @@
 import React from "react";
-import Code from "./code";
 import styled from "styled-components";
 import imgReact from "../assets/react.png";
 import Image from "./image";

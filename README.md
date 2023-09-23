@@ -9,4 +9,101 @@ This is a setup for development with RSC (React Server Components), without SSR 
 3. **npm run app** (in a new terminal window)
 4. enter **localhost:8080** in the browser.
 
-## Execute (install and run) the setup to see instructions on how to use it
+## Instructions on how to develop with this setup
+
+In this setup you first, for example, define an RCC (React Client Component).
+
+Then you should define the corresponding RSC to this RCC. Let's say you defined 'SomeComponent' RCC. Then you should define an RSC named 'SomeComponentRSC'.
+
+```javascript
+// I am a RCC. I am located in the 'src/client/components' folder.
+import React from "react";
+
+export default function SomeComponent({ name }) {
+  return <>hi {name}</>;
+}
+```
+
+```javascript
+// I am a RSC. I am located in the 'src/server/components' folder, and I am async.
+import React from "react";
+import RCC from "./rcc.js";
+
+export default async function SomeComponentRSC() {
+  const name = await new Promise((r) => setTimeout(() => r("Roger"), 1000));
+  return <RCC __isClient__="../components/some-component.js" name={name} />;
+}
+```
+
+Then in the 'Router' RSC you should add the name of the component in the switch statement.
+
+```javascript
+// I am a RSC ...
+export default async function Router({ url, body: { props } }) {
+  switch (url.pathname.slice(1)) {
+    case "home":
+      return <HomeRSC {...props} />;
+    case "some-component":
+      return <SomeComponentRSC {...props} />;
+    default:
+      return <RCC __isClient__="../components/ups.js" />;
+  }
+}
+```
+
+Finally you should "call" your RSC from a RCC using the 'RSC' RCC.
+
+```javascript
+// I am a RCC
+import React from "react";
+import RSC from "./rsc.js";
+
+export default function SomeRCC() {
+  return (
+    <>
+      {/* ... */}
+      <RSC componentName="some-component">loading ...</RSC>;
+    </>
+  );
+}
+```
+
+`RSC` itself is a RCC, a special one. Next is its definition.
+
+```javascript
+// I am a RCC. I am located in the 'src/client/components' folder.
+import React, { useEffect } from "react";
+import { fillJSXwithClientComponents, parseJSX } from "../utils/index.js";
+
+export default function RSC({ componentName, children, ...props }) {
+  const [JSX, setJSX] = React.useState(children);
+  const body = JSON.stringify({ props });
+
+  useEffect(() => {
+    setJSX(children);
+    fetch(`/${componentName}`, {
+      method: "post",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then(async (response) => {
+      const clientJSXString = await response.text();
+      const clientJSX = JSON.parse(clientJSXString, parseJSX);
+      const fixedClientJSX = await fillJSXwithClientComponents(clientJSX);
+      setJSX(fixedClientJSX);
+    });
+  }, [componentName, body]);
+
+  return JSX;
+}
+```
+
+And next is the definition of `RCC` RSC, found before.
+
+```javascript
+// I am a RSC. I am located in the 'src/server/components' folder.
+export default async function RCC() {
+  return null;
+}
+```
+
+As you can see it does nothing.
