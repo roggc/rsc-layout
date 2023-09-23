@@ -3,6 +3,7 @@ import RSC from "./rsc.js";
 import L from "./link.js";
 import { useNavigation } from "../hooks/index.js";
 import styled from "styled-components";
+import Error from "./error.js";
 
 export default function Layout() {
   const page = useNavigation();
@@ -13,7 +14,12 @@ export default function Layout() {
         <Link page={{ name: "home" }}>home</Link>
         <Link page={{ name: "foo" }}>foo</Link>
       </Nav>
-      <RSC key={page.name} componentName={page.name} {...page.props}>
+      <RSC
+        key={page.name}
+        componentName={page.name}
+        {...page.props}
+        errorJSX={<Error />}
+      >
         <LoadingContainer>loading {page.name} page...</LoadingContainer>
       </RSC>
     </Container>
