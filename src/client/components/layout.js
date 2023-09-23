@@ -11,9 +11,13 @@ export default function Layout() {
     <Container>
       <Nav>
         <Link page={{ name: "home" }}>home</Link>
+        <Link page={{ name: "how-this-setup-works" }}>
+          how this setup works
+        </Link>
+        <Link page={{ name: "foo" }}>foo</Link>
       </Nav>
       <RSC key={page.name} componentName={page.name} {...page.props}>
-        loading {page.name} page...
+        <LoadingContainer>loading {page.name} page...</LoadingContainer>
       </RSC>
     </Container>
   );
@@ -21,9 +25,20 @@ export default function Layout() {
 
 const Nav = styled.div`
   display: flex;
+  flex-direction: column;
   ${({ theme }) => `gap: ${theme.gap}px;`}
 `;
 
 const Container = styled.div`
   font-family: sans-serif;
+  display: flex;
+  height: 97vh;
+`;
+
+const LoadingContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 `;
