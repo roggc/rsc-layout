@@ -11,8 +11,12 @@ export default function Layout() {
   return (
     <Container>
       <Nav>
-        <Link page={{ name: "home" }}>home</Link>
-        <Link page={{ name: "foo" }}>foo</Link>
+        <Link page={{ name: "home" }} cssIsActive="color:orange;">
+          home
+        </Link>
+        <Link page={{ name: "foo" }} cssIsActive="color:orange;">
+          foo
+        </Link>
       </Nav>
       <RSC
         key={page.name}
