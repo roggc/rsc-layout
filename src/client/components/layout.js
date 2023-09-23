@@ -25,7 +25,6 @@ const Nav = styled.div`
   flex-direction: column;
   ${({ theme }) => `gap: ${theme.gap}px;`}
   min-width:100px;
-  border-right: 2px solid blue;
 `;
 
 const Container = styled.div`
