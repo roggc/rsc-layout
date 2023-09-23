@@ -8,3 +8,5 @@ This is a setup for development with RSC (React Server Components), without SSR 
 2. **npm run dev**
 3. **npm run app** (in a new terminal window)
 4. enter **localhost:8080** in the browser.
+
+## Execute (install and run) the setup to see instructions on how to use it
