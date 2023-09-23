@@ -1,21 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { fillJSXwithClientComponents, parseJSX } from "../utils/index.js";
 
 export default function RSC({ componentName, children, ...props }) {
   const [JSX, setJSX] = React.useState(children);
-  const stringifyedProps = JSON.stringify(props ?? {});
+  const body = JSON.stringify({ props });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setJSX(children);
-    fetch(`/${componentName}?props=${stringifyedProps}`).then(
-      async (response) => {
-        const clientJSXString = await response.text();
-        const clientJSX = JSON.parse(clientJSXString, parseJSX);
-        const fixedClientJSX = await fillJSXwithClientComponents(clientJSX);
-        setJSX(fixedClientJSX);
-      }
-    );
-  }, [componentName, stringifyedProps]);
+    fetch(`/${componentName}`, {
+      method: "post",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then(async (response) => {
+      const clientJSXString = await response.text();
+      const clientJSX = JSON.parse(clientJSXString, parseJSX);
+      const fixedClientJSX = await fillJSXwithClientComponents(clientJSX);
+      setJSX(fixedClientJSX);
+    });
+  }, [componentName, body]);
 
   return JSX;
 }

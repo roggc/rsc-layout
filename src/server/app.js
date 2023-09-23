@@ -7,6 +7,8 @@ import HTML from "../client/components/html.js";
 
 const app = express();
 app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/favicon.ico", (req, res, next) => {
   res.end("");
@@ -24,7 +26,9 @@ app.use(async (req, res, next) => {
         },
       });
     } else {
-      const clientJSX = await renderJSXToClientJSX(<Router url={url} />);
+      const clientJSX = await renderJSXToClientJSX(
+        <Router url={url} body={req.body} />
+      );
       const clientJSXString = JSON.stringify(clientJSX, stringifyJSX);
       res.setHeader("Content-Type", "application/json");
       res.end(clientJSXString);
