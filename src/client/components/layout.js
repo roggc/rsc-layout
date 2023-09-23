@@ -1,6 +1,6 @@
 import React from "react";
 import RSC from "./rsc.js";
-import Link from "./link.js";
+import L from "./link.js";
 import { useNavigation } from "../hooks/index.js";
 import styled from "styled-components";
 
@@ -11,9 +11,6 @@ export default function Layout() {
     <Container>
       <Nav>
         <Link page={{ name: "home" }}>home</Link>
-        <Link page={{ name: "how-this-setup-works" }}>
-          how this setup works
-        </Link>
         <Link page={{ name: "foo" }}>foo</Link>
       </Nav>
       <RSC key={page.name} componentName={page.name} {...page.props}>
@@ -27,6 +24,8 @@ const Nav = styled.div`
   display: flex;
   flex-direction: column;
   ${({ theme }) => `gap: ${theme.gap}px;`}
+  min-width:100px;
+  border-right: 2px solid blue;
 `;
 
 const Container = styled.div`
@@ -41,4 +40,8 @@ const LoadingContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+`;
+
+const Link = styled(L)`
+  padding: 10px;
 `;
