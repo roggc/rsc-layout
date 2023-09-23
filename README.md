@@ -107,3 +107,64 @@ export default async function RCC() {
 ```
 
 As you can see it does nothing.
+
+You can pass props to `RSC` RCC:
+
+```javascript
+export default function SomeRCC() {
+  // ...
+  return (
+    <>
+      {/* ... */}
+      <RSC componentName="say-hello" name="Roger">
+        loading ...
+      </RSC>
+    </>
+  );
+}
+```
+
+Then in `SayHelloRSC` you get these props.
+
+```javascript
+export default async function SayHelloRSC({ name }) {
+  const greeting = await new Promise((r) =>
+    setTimeout(() => {
+      switch (name) {
+        case "Roger":
+          return r("hey, whatsup...");
+        default:
+          return r("hello, how r u doing?");
+      }
+    }, 500)
+  );
+  return <RCC __isClient__="../components/say-hello.js" greeting={greeting} />;
+}
+```
+
+Then in your `SayHello` RCC you will have:
+
+```javascript
+export default function SayHello({ greeting }) {
+  return <>{greeting}</>;
+}
+```
+
+You see how we "called" the `RSC` RCC with a prop `name`, which was used to fetch data on the `SayHelloRSC` RSC, and then this data (`greeting`), was passed as another prop to the call of `RCC` RSC, which in turn ended up in the `SayHello` RCC.
+
+The `Router` RSC will be then:
+
+```javascript
+export default async function Router({ url, body: { props } }) {
+  switch (url.pathname.slice(1)) {
+    case "home":
+      return <HomeRSC {...props} />;
+    case "say-hello":
+      return <SayHelloRSC {...props} />;
+    default:
+      return <RCC __isClient__="../components/ups.js" />;
+  }
+}
+```
+
+The call to `RSC` RCC from any RCC is like a barrier for the flow of props which are functions, because functions cannot be stringified. So in this case use `react-context-slices` to set the function into the global shared state and then recover its value down in the tree of RCC's, bypassing in this way the barrier that `RSC` RCC's are for this type of values (functions).
