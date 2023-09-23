@@ -168,3 +168,7 @@ export default async function Router({ url, body: { props } }) {
 ```
 
 The call to `RSC` RCC from any RCC is like a barrier for the flow of props which are functions, because functions cannot be stringified. So in this case use `react-context-slices` to set the function into the global shared state and then recover its value down in the tree of RCC's, bypassing in this way the barrier that `RSC` RCC's are for this type of values (functions).
+
+## React.Suspense not implemented
+
+React.Suspense is not implemented in this setup so don't use it (you will get an error or exception thrown). But in theory you don't need it, with the use of `RSC` RCC that fetches the server. If I am wrong about this point let me know.
